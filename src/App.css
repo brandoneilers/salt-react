@@ -1,0 +1,166 @@
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--salt-container-primary-background);
+  color: var(--salt-content-primary-foreground);
+}
+
+.sidebar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  border-right: 1px solid var(--salt-separable-primary-borderColor, #e5e5e5);
+}
+
+/* The draggable strip between the sidebar and main content. Kept visually
+   thin at rest and widened only via the ::after line so the hit target
+   (this element) can stay comfortably wider than what's actually painted. */
+.resize-handle {
+  width: 6px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  touch-action: none;
+  position: relative;
+}
+
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2px;
+  width: 2px;
+  background: transparent;
+}
+
+.resize-handle:hover::after,
+.resize-handle-active::after,
+.resize-handle:focus-visible::after {
+  background: var(--salt-accent-background, #1e88e5);
+}
+
+.resize-handle:focus-visible {
+  outline: none;
+}
+
+.sidebar-brand {
+  padding: 8px 12px 16px;
+}
+
+/*
+ * Workaround for a @salt-ds/core@1.67.0 layout bug: VerticalNavigationItemTrigger's
+ * ::before overlay is absolutely positioned but its <li> ancestor is never given
+ * `position: relative`, so the overlay's containing block becomes the whole <ol>
+ * instead of its own row - the last nav item's overlay ends up covering (and
+ * intercepting clicks for) every item above it.
+ */
+.sidebar .saltVerticalNavigationItem {
+  position: relative;
+}
+
+/* Salt leaves align-items at its default ("normal", which behaves like
+   stretch for a row) on the icon+label flex row, so the icon and text
+   don't sit on the same center line - nudge it to actually center them. */
+.sidebar .saltVerticalNavigationItemContent {
+  align-items: center;
+}
+
+.theme-toggle {
+  flex-shrink: 0;
+}
+
+.app-main {
+  flex: 1;
+  padding: 32px 40px;
+  overflow-x: hidden;
+}
+
+.stat-card {
+  width: 100%;
+}
+
+.stat-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--salt-container-secondary-background, rgba(125, 125, 125, 0.12));
+}
+
+.chart-panel,
+.activity-panel {
+  height: 100%;
+}
+
+.chart-status {
+  height: 220px;
+  text-align: center;
+}
+
+.activity-row-text {
+  min-width: 0;
+}
+
+.sortable-header {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.sortable-header:hover {
+  text-decoration: underline;
+}
+
+.sortable-header:focus-visible {
+  outline: var(--salt-focused-outline);
+  outline-offset: var(--salt-focused-outlineOffset);
+}
+
+/* SearchInput (from @salt-ds/lab) has no built-in bordered variant, so it
+   otherwise blends into the card behind it - add one to make it read
+   clearly as an input field. */
+.users-search {
+  border: 1px solid var(--salt-selectable-primary-borderColor, var(--salt-separable-primary-borderColor, #767676));
+  border-radius: var(--salt-palette-corner, 0);
+}
+
+/* ToggleButtonGroup already renders its own outer border, but at a
+   different (dimmer) gray than the bordered Button next to it - force it
+   to the same token so the two read as consistent, single-bordered controls. */
+.density-toggle-group {
+  border-color: var(--salt-actionable-borderColor, rgb(132, 135, 142));
+}
+
+.stub-panel {
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stub-panel-content {
+  text-align: center;
+  max-width: 420px;
+}
+
+/* Standard "screen-reader only" pattern: keeps content in the accessibility
+   tree (readable by assistive tech, referenceable via aria-labelledby)
+   without taking up visible layout space. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
