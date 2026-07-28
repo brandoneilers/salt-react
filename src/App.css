@@ -91,9 +91,21 @@
 
 /* Salt leaves align-items at its default ("normal", which behaves like
    stretch for a row) on the icon+label flex row, so the icon and text
-   don't sit on the same center line - nudge it to actually center them. */
+   don't sit on the same center line - nudge it to actually center them.
+   It also doesn't stretch this content box to fill its trigger's width,
+   so the bordered/filled active-item box only wraps snugly around the
+   icon+label instead of spanning the full row like Salt's own docs
+   examples show. */
 .sidebar .saltVerticalNavigationItemContent {
   align-items: center;
+  width: 100%;
+}
+
+/* Salt's own trigger padding (6px top/bottom) leaves the bordered/filled
+   box shorter than its <li> row, showing as a visible gap between
+   consecutive items - Salt's docs examples sit flush with no such gap. */
+.sidebar .saltVerticalNavigationItemTrigger {
+  padding-block: 0;
 }
 
 .theme-toggle {

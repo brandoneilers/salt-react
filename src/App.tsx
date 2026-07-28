@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { SaltProvider, StackLayout, FlexLayout, H1, Text, Button, useBreakpoint } from '@salt-ds/core'
+import { SaltProviderNext, StackLayout, FlexLayout, H1, Text, Button, useBreakpoint } from '@salt-ds/core'
 import {
   DashboardIcon,
   ChartLineIcon,
@@ -118,7 +118,7 @@ function App() {
 
   return (
     <ThemeModeContext.Provider value={darkMode}>
-      <SaltProvider mode={darkMode ? 'dark' : 'light'} density={density}>
+      <SaltProviderNext mode={darkMode ? 'dark' : 'light'} density={density} corner="rounded">
         <div className="app-shell">
           <Sidebar
             active={active}
@@ -189,7 +189,7 @@ function App() {
             </StackLayout>
           </main>
         </div>
-      </SaltProvider>
+      </SaltProviderNext>
     </ThemeModeContext.Provider>
   )
 }

@@ -54,7 +54,7 @@ function SidebarComponent({ active, onSelect, width, isMobile, open, onClose }: 
           </Button>
         )}
       </div>
-      <VerticalNavigation appearance="indicator">
+      <VerticalNavigation appearance="bordered">
         {NAV_ITEMS.map(({ label, icon: Icon }) => (
           <VerticalNavigationItem key={label} active={active === label}>
             <VerticalNavigationItemTrigger
