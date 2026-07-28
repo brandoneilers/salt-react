@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import Highcharts from 'highcharts'
-import HighchartsReact from '../../lib/HighchartsReact'
+import { ResponsiveHighcharts } from '../ResponsiveHighcharts'
 import { ChartCard } from '../ChartCard'
 import { useDeviceBreakdownQuery } from '../../hooks/useAnalyticsQueries'
 
@@ -36,7 +36,7 @@ export function DeviceBreakdownChart() {
 
   return (
     <ChartCard title="Traffic by Device" isLoading={isLoading} isError={isError} error={error} onRetry={refetch}>
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+      <ResponsiveHighcharts highcharts={Highcharts} options={chartOptions} />
     </ChartCard>
   )
 }

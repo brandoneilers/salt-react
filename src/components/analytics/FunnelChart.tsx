@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import Highcharts from 'highcharts'
-import HighchartsReact from '../../lib/HighchartsReact'
+import { ResponsiveHighcharts } from '../ResponsiveHighcharts'
 import { ChartCard } from '../ChartCard'
 import { useFunnelQuery } from '../../hooks/useAnalyticsQueries'
 
@@ -37,7 +37,7 @@ export function FunnelChart() {
   // retries - `onRetry={refetch}` below is what the "Try again" button calls.
   return (
     <ChartCard title="Conversion Funnel" isLoading={isLoading} isError={isError} error={error} onRetry={refetch}>
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+      <ResponsiveHighcharts highcharts={Highcharts} options={chartOptions} />
     </ChartCard>
   )
 }

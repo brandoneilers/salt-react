@@ -5,6 +5,7 @@ import {
   VerticalNavigationItemContent,
   VerticalNavigationItemLabel,
   VerticalNavigationItemTrigger,
+  Button,
   H3,
 } from '@salt-ds/core'
 import {
@@ -13,6 +14,7 @@ import {
   UserGroupIcon,
   BuildReportIcon,
   SettingsIcon,
+  CloseIcon,
 } from '@salt-ds/icons'
 
 const NAV_ITEMS = [
@@ -27,13 +29,30 @@ interface SidebarProps {
   active: string
   onSelect: (label: string) => void
   width: number
+  // Below Salt's `xs` breakpoint (600px) the sidebar switches from a fixed
+  // column that pushes content over to an off-canvas drawer that overlays
+  // it instead - there simply isn't room to spare a resizable column on a
+  // phone-width screen, and the drag handle for it was actively breaking
+  // the layout there.
+  isMobile: boolean
+  open: boolean
+  onClose: () => void
 }
 
-function SidebarComponent({ active, onSelect, width }: SidebarProps) {
+function SidebarComponent({ active, onSelect, width, isMobile, open, onClose }: SidebarProps) {
+  const className = isMobile
+    ? `sidebar sidebar-drawer${open ? ' sidebar-drawer-open' : ''}`
+    : 'sidebar'
+
   return (
-    <aside className="sidebar" style={{ width }}>
+    <aside className={className} style={{ width }}>
       <div className="sidebar-brand">
         <H3>Not A Real Company, LLC</H3>
+        {isMobile && (
+          <Button appearance="transparent" aria-label="Close navigation" onClick={onClose}>
+            <CloseIcon aria-hidden />
+          </Button>
+        )}
       </div>
       <VerticalNavigation appearance="indicator">
         {NAV_ITEMS.map(({ label, icon: Icon }) => (

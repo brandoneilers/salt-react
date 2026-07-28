@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { SaltProvider, StackLayout, H1, Text } from '@salt-ds/core'
+import { SaltProvider, StackLayout, FlexLayout, H1, Text, Button, useBreakpoint } from '@salt-ds/core'
 import {
   DashboardIcon,
   ChartLineIcon,
   UserGroupIcon,
   BuildReportIcon,
   SettingsIcon,
+  MenuIcon,
 } from '@salt-ds/icons'
 import { Sidebar } from './components/Sidebar'
 import { ResizeHandle } from './components/ResizeHandle'
@@ -53,6 +54,7 @@ type PageName = keyof typeof PAGES
 
 const SIDEBAR_MIN_WIDTH = 180
 const SIDEBAR_MAX_WIDTH = 420
+const MOBILE_SIDEBAR_WIDTH = 280
 
 function App() {
   const [active, setActive] = useState<PageName>('Dashboard')
@@ -64,6 +66,14 @@ function App() {
     minWidth: SIDEBAR_MIN_WIDTH,
     maxWidth: SIDEBAR_MAX_WIDTH,
   })
+
+  // Reads the same breakpoint system SaltProvider already drives the
+  // GridLayout `columns={{ xs: ... }}` props with elsewhere in this app -
+  // `xs` is Salt's smallest breakpoint (below 600px). Below it, the
+  // resizable sidebar switches to an off-canvas drawer instead.
+  const { breakpoint } = useBreakpoint()
+  const isMobile = breakpoint === 'xs'
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   // usePrevious (a custom hook built from useRef + useEffect) remembers
   // which page was active before this render - `undefined` on first mount.
@@ -101,36 +111,62 @@ function App() {
   // reasons (e.g. App re-rendering because the theme toggled).
   const handleSelectPage = useCallback((label: string) => {
     setActive(label as PageName)
+    // Closing the drawer here is a no-op on desktop (mobileNavOpen is
+    // already false), so this doesn't need an isMobile check.
+    setMobileNavOpen(false)
   }, [])
 
   return (
     <ThemeModeContext.Provider value={darkMode}>
       <SaltProvider mode={darkMode ? 'dark' : 'light'} density={density}>
         <div className="app-shell">
-          <Sidebar active={active} onSelect={handleSelectPage} width={sidebarWidth.width} />
-          <ResizeHandle
-            width={sidebarWidth.width}
-            minWidth={SIDEBAR_MIN_WIDTH}
-            maxWidth={SIDEBAR_MAX_WIDTH}
-            isDragging={sidebarWidth.isDragging}
-            onPointerDown={sidebarWidth.handlePointerDown}
-            onPointerMove={sidebarWidth.handlePointerMove}
-            onPointerUp={sidebarWidth.handlePointerUp}
-            onKeyDown={sidebarWidth.handleKeyDown}
+          <Sidebar
+            active={active}
+            onSelect={handleSelectPage}
+            width={isMobile ? MOBILE_SIDEBAR_WIDTH : sidebarWidth.width}
+            isMobile={isMobile}
+            open={mobileNavOpen}
+            onClose={() => setMobileNavOpen(false)}
           />
+          {isMobile && mobileNavOpen && (
+            <div className="mobile-nav-scrim" onClick={() => setMobileNavOpen(false)} />
+          )}
+          {!isMobile && (
+            <ResizeHandle
+              width={sidebarWidth.width}
+              minWidth={SIDEBAR_MIN_WIDTH}
+              maxWidth={SIDEBAR_MAX_WIDTH}
+              isDragging={sidebarWidth.isDragging}
+              onPointerDown={sidebarWidth.handlePointerDown}
+              onPointerMove={sidebarWidth.handlePointerMove}
+              onPointerUp={sidebarWidth.handlePointerUp}
+              onKeyDown={sidebarWidth.handleKeyDown}
+            />
+          )}
           <main className="app-main">
             <StackLayout gap={4}>
-              <StackLayout gap={0}>
-                <H1 ref={headingRef} tabIndex={-1}>
-                  {active}
-                </H1>
-                <Text color="secondary">{page.subtitle}</Text>
-                {previousActive && previousActive !== active && (
-                  <Text styleAs="label" color="secondary">
-                    Previously viewing {previousActive}
-                  </Text>
+              <FlexLayout align="center" gap={2}>
+                {isMobile && (
+                  <Button
+                    appearance="transparent"
+                    aria-label="Open navigation"
+                    onClick={() => setMobileNavOpen(true)}
+                  >
+                    <MenuIcon aria-hidden />
+                  </Button>
                 )}
-              </StackLayout>
+                <StackLayout gap={0}>
+                  <H1 ref={headingRef} tabIndex={-1}>
+                    {active}
+                  </H1>
+                  <Text color="secondary">{page.subtitle}</Text>
+                  {previousActive && previousActive !== active && (
+                    <Text styleAs="label" color="secondary">
+                      Previously viewing {previousActive}
+                    </Text>
+                  )}
+                </StackLayout>
+              </FlexLayout>
 
               {active === 'Dashboard' && <DashboardPage />}
               {active === 'Analytics' && <AnalyticsPage />}

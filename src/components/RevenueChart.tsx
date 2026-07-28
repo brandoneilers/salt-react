@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import Highcharts from 'highcharts'
 import { Card, FlexLayout, StackLayout, Text, H3 } from '@salt-ds/core'
 import { ThemeModeContext } from '../context/ThemeModeContext'
-import HighchartsReact from '../lib/HighchartsReact'
+import { ResponsiveHighcharts } from './ResponsiveHighcharts'
 
 const MONTHLY_REVENUE = [
   { month: 'Jan', value: 42 },
@@ -99,7 +99,7 @@ export function RevenueChart() {
             Best: {bestMonth.month} (${bestMonth.value}k)
           </Text>
         </FlexLayout>
-        <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+        <ResponsiveHighcharts highcharts={Highcharts} options={chartOptions} />
       </StackLayout>
     </Card>
   )

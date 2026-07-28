@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import Highcharts from 'highcharts'
-import HighchartsReact from '../../lib/HighchartsReact'
+import { ResponsiveHighcharts } from '../ResponsiveHighcharts'
 import { Text } from '@salt-ds/core'
 import { ChartCard } from '../ChartCard'
 import { useTrafficQuery } from '../../hooks/useAnalyticsQueries'
@@ -50,7 +50,7 @@ export function TrafficChart() {
       error={error}
       onRetry={refetch}
     >
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+      <ResponsiveHighcharts highcharts={Highcharts} options={chartOptions} />
     </ChartCard>
   )
 }
