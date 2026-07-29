@@ -13,6 +13,7 @@ import { ResizeHandle } from './components/ResizeHandle'
 import { DashboardPage } from './pages/DashboardPage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
 import { UsersPage } from './pages/UsersPage'
+import { ReportsPage } from './pages/ReportsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { StubPage } from './pages/StubPage'
 import { ThemeModeContext } from './context/ThemeModeContext'
@@ -171,6 +172,7 @@ function App() {
               {active === 'Dashboard' && <DashboardPage />}
               {active === 'Analytics' && <AnalyticsPage />}
               {active === 'Users' && <UsersPage />}
+              {active === 'Reports' && <ReportsPage />}
               {active === 'Settings' && (
                 <SettingsPage
                   darkMode={darkMode}
@@ -183,6 +185,7 @@ function App() {
               {active !== 'Dashboard' &&
                 active !== 'Analytics' &&
                 active !== 'Users' &&
+                active !== 'Reports' &&
                 active !== 'Settings' && (
                   <StubPage title={active} description={page.description} icon={page.icon} />
                 )}

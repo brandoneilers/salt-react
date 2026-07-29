@@ -209,6 +209,23 @@
   max-width: 420px;
 }
 
+/* The FlexLayout row squeezes this button below "Generate Report"'s
+   natural width, and Button's text wraps by default rather than growing
+   the button - two lines cramped into the button's normal height instead
+   of one. */
+.generate-report-button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.toast-notification {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 200;
+  max-width: 360px;
+}
+
 /* Standard "screen-reader only" pattern: keeps content in the accessibility
    tree (readable by assistive tech, referenceable via aria-labelledby)
    without taking up visible layout space. */

@@ -14,6 +14,7 @@ All data in the app is **simulated** — the Analytics page hits a fake in-memor
 - **Dashboard** — stat cards, a Highcharts revenue chart, and a recent-activity feed
 - **Analytics** — three chart types (line, donut, bar) each backed by its own [TanStack Query](https://tanstack.com/query) hook, with real loading spinners and a deliberately-flaky endpoint to exercise the error + retry path
 - **Users** — a searchable, sortable table built on Salt's `Table` primitives (Salt has no built-in data-grid component with search/sort — this is hand-rolled on top of `Table`/`SearchInput`)
+- **Reports** — a generate-report flow backed by this app's first TanStack Query **mutation** (everywhere else only reads data with `useQuery`), with a real loading state on the button, a `Toast` on success/failure, and a paginated report-history table (`Pagination`/`Paginator`) that refetches via `invalidateQueries` once generation succeeds
 - **Settings** — a "Workspace" panel for theme (light/dark), density (high/medium/low/touch), and resetting the sidebar's width
 - A **resizable sidebar** (drag or arrow-key resize, persisted to `localStorage`) that becomes an off-canvas drawer with a hamburger toggle below Salt's `xs` breakpoint (600px) — dragging a resizable column doesn't make sense on a phone-width screen, so it's disabled entirely there rather than left broken
 - Light/dark mode and density are both real Salt theming levers (`SaltProviderNext`'s `mode`/`density` props), not just CSS
@@ -46,7 +47,7 @@ npm run lint
 
 ```
 src/
-  api/            simulated backend (fake latency, one endpoint fails ~35% of the time on purpose)
+  api/            simulated backend (fake latency; some endpoints fail some of the time on purpose)
   components/     shared, mostly presentational components
   components/analytics/   the three Analytics chart components
   context/        ThemeModeContext (see "Architecture notes" below)
@@ -68,6 +69,8 @@ Test files live in a `__tests__` folder next to what they cover (e.g. `src/hooks
 | `useResizableWidth` | Drag/keyboard-resizable panel width with min/max clamping, used by the sidebar |
 | `usePrevious` | Generic "what was this value last render" (`useRef` + `useEffect`) |
 | `useAnalyticsQueries` | Thin wrappers around `useQuery` for the three Analytics endpoints |
+| `useReportsQueries` | `useQuery` for report history, plus this app's first `useMutation` (generating a report), which invalidates the history query on success |
+| `useToast` | Single-toast state with auto-dismiss, used by the Reports generate/download flows |
 
 Each hook's source comments explain *why* it's written the way it is (e.g. why `useResizableWidth` tracks its drag state in a `ref` in addition to `useState` — a real race condition between pointer events and React's render cycle, not a hypothetical one).
 
@@ -89,6 +92,7 @@ Building this surfaced a few real upstream issues, fixed and documented in place
 - **`corner="rounded"` (and the other `SaltProviderNext`-only theming props) render as a no-op if you import `@salt-ds/theme/index.css`** — that's the legacy bundle, and it ships zero `[data-corner]` CSS rules in any published version. The fix is importing `@salt-ds/theme/css/global.css` + `@salt-ds/theme/css/theme-next.css` instead (`src/main.tsx`).
 - **`VerticalNavigationItemContent` doesn't stretch to fill its trigger's width**, and the trigger's own vertical padding leaves a visible gap between consecutive items — neither matches Salt's own docs examples, where bordered nav items span the full row and sit flush against each other. Two targeted CSS rules in `src/App.css` fix both.
 - **CSS Grid items default to `min-width: auto`**, so they won't shrink below their content's natural size — combined with the stale-Highcharts-width issue above, a chart card's oversized SVG could inflate its *entire shared grid track* and drag a neighboring card (like Recent Activity, which has no oversized content of its own) into overflow right along with it. Fixed alongside the `ResponsiveHighcharts` reflow fix as belt-and-suspenders.
+- **`Pagination` renders an empty `<nav>` with no children of its own** — it's a context provider, not a self-contained control; it expects a `<Paginator />` (or hand-rolled page buttons reading from its context) passed in as a child. Passing `count`/`page`/`onPageChange` alone silently renders nothing.
 
 ## Testing
 
@@ -98,4 +102,4 @@ Vitest + React Testing Library, run against `jsdom`. A few polyfills were needed
 - `matchMedia`, `ResizeObserver` (used by Salt's theme/breakpoint code)
 - `CSS.supports` (checked by Highcharts at module-load time)
 
-Coverage focuses on things with actual logic to break: every custom hook, the simulated API layer (including the flaky-endpoint and retry-disabled paths), interactive components (`ChartCard`'s three states, `Sidebar` navigation and its mobile-drawer behavior, `ResizeHandle`), the `Users` page's search/sort behavior, and `App`-level navigation/focus/title behavior. Purely presentational chart-wiring components aren't unit tested — that would mostly be re-testing Highcharts, not this codebase.
+Coverage focuses on things with actual logic to break: every custom hook, the simulated API layer (including the flaky-endpoint and retry-disabled paths), interactive components (`ChartCard`'s three states, `Sidebar` navigation and its mobile-drawer behavior, `ResizeHandle`, `ToastNotification`), the `Users` page's search/sort behavior, the `Reports` page's generate/error/pagination/download behavior (mocking the API layer directly rather than waiting out real simulated latency), and `App`-level navigation/focus/title behavior. Purely presentational chart-wiring components aren't unit tested — that would mostly be re-testing Highcharts, not this codebase.
