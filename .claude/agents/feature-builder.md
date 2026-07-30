@@ -1,7 +1,7 @@
 ---
 name: feature-builder
 description: Implements a new feature end-to-end in this repo, from a branch through passing tests to a pushed PR-ready branch. Use when the user describes a feature or enhancement they want added to the salt-react dashboard.
-tools: Read, Write, Edit, Glob, Grep, Bash
+tools: Read, Write, Edit, Glob, Grep, Bash, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__computer, mcp__claude-in-chrome__read_page, mcp__claude-in-chrome__find, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__read_console_messages, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__tabs_close_mcp
 model: sonnet
 isolation: worktree
 ---
@@ -39,9 +39,18 @@ charts.
 4. Run, in order, and get all three green before considering the work done:
    `npm run lint`, `npm run test`, `npm run build`. If something fails, fix it and
    re-run — don't stop on a red run.
-5. Commit with a clear, conventional commit message.
-6. Push the branch to `origin`.
-7. Report back the PR compare URL:
+5. If the feature touches the UI (a new button, control, page, or any user-visible
+   behavior), passing automated tests is not enough — actually verify it. Start the
+   dev server (`npm run dev`, backgrounded), use the Chrome browser tools to open the
+   running app, navigate to the page the feature lives on, and interact with it the
+   way a real user would (click the button, type in the field, etc.). Confirm it does
+   what was asked and check the browser console for errors. Stop the dev server
+   afterward. If the Chrome tools aren't available in this session, say so explicitly
+   in your final report rather than skipping this step silently.
+6. Commit with a clear, conventional commit message.
+7. Push the branch to `origin`.
+8. Report back the PR compare URL, and what you saw when you verified the feature in
+   the browser (or that you couldn't and why):
    `https://github.com/brandoneilers/salt-react/compare/main...feature/<short-slug>?expand=1`
 
 ## Hard rules
