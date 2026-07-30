@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { screen, within } from '@testing-library/react'
+
+async function readCsvBytes(blob: Blob) {
+  return new Uint8Array(await blob.arrayBuffer())
+}
 import userEvent from '@testing-library/user-event'
 import { renderWithSalt } from '../../test/renderWithProviders'
 import { UsersPage } from '../UsersPage'
@@ -108,8 +112,9 @@ describe('UsersPage', () => {
     await user.click(screen.getByRole('button', { name: 'Export CSV' }))
 
     const blob = createObjectURLSpy.mock.calls[0][0] as Blob
-    const csv = await blob.text()
-    expect(csv).toBe(
+    const bytes = await readCsvBytes(blob)
+    expect(Array.from(bytes.slice(0, 3))).toEqual([0xef, 0xbb, 0xbf])
+    expect(new TextDecoder('utf-8').decode(bytes)).toBe(
       'name,email,role,status,last active\n' +
         'Marcus Lee,marcus.lee@example.com,Editor,Active,22m ago\n' +
         'Sofia Brandt,sofia.brandt@example.com,Editor,Active,4h ago\n' +
@@ -125,8 +130,9 @@ describe('UsersPage', () => {
     await user.click(screen.getByRole('button', { name: 'Export CSV' }))
 
     const blob = createObjectURLSpy.mock.calls[0][0] as Blob
-    const csv = await blob.text()
-    expect(csv).toBe('name,email,role,status,last active')
+    const bytes = await readCsvBytes(blob)
+    expect(Array.from(bytes.slice(0, 3))).toEqual([0xef, 0xbb, 0xbf])
+    expect(new TextDecoder('utf-8').decode(bytes)).toBe('name,email,role,status,last active')
     expect(revokeObjectURLSpy).toHaveBeenCalledTimes(1)
   })
 })
