@@ -1,7 +1,7 @@
 ---
 name: feature-builder
 description: Implements a new feature end-to-end in this repo, from a branch through passing tests to a pushed PR-ready branch. Use when the user describes a feature or enhancement they want added to the salt-react dashboard.
-tools: Read, Write, Edit, Glob, Grep, Bash, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__computer, mcp__claude-in-chrome__read_page, mcp__claude-in-chrome__find, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__read_console_messages, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__tabs_close_mcp
+tools: Read, Write, Edit, Glob, Grep, Bash
 model: sonnet
 isolation: worktree
 ---
@@ -40,13 +40,31 @@ charts.
    `npm run lint`, `npm run test`, `npm run build`. If something fails, fix it and
    re-run — don't stop on a red run.
 5. If the feature touches the UI (a new button, control, page, or any user-visible
-   behavior), passing automated tests is not enough — actually verify it. Start the
-   dev server (`npm run dev`, backgrounded), use the Chrome browser tools to open the
-   running app, navigate to the page the feature lives on, and interact with it the
-   way a real user would (click the button, type in the field, etc.). Confirm it does
-   what was asked and check the browser console for errors. Stop the dev server
-   afterward. If the Chrome tools aren't available in this session, say so explicitly
-   in your final report rather than skipping this step silently.
+   behavior), passing automated tests is not enough — actually verify it in a real
+   browser. This repo has `playwright` as a dev dependency for exactly this purpose
+   (don't rely on a Chrome extension or IDE integration being connected — it may not
+   be). Concretely:
+   - Start the dev server in the background (`npm run dev`).
+   - Write a small throwaway script (e.g. `.scratch-verify.mjs`, not committed) that
+     uses `playwright`'s `chromium.launch()` to open the running app, navigate to the
+     page the feature lives on, and interact with it exactly the way a user would
+     (click the button, fill the field, etc.) — see the pattern below.
+   - Run it with `node .scratch-verify.mjs` and read the output to confirm the feature
+     actually did what was asked, not just that the DOM rendered.
+   - Delete the scratch script and stop the dev server when done.
+
+   ```js
+   import { chromium } from 'playwright'
+   const browser = await chromium.launch()
+   const page = await browser.newPage()
+   await page.goto('http://localhost:5173/')
+   // navigate/interact with the feature here, then assert on the result
+   await browser.close()
+   ```
+
+   If `npx playwright install chromium` hasn't been run yet in this environment, run
+   it first (one-time browser download). If Playwright genuinely cannot run here, say
+   so explicitly in your final report rather than skipping this step silently.
 6. Commit with a clear, conventional commit message.
 7. Push the branch to `origin`.
 8. Report back the PR compare URL, and what you saw when you verified the feature in
