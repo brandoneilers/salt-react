@@ -34,12 +34,17 @@ charts.
 
 1. Make sure you're starting from an up-to-date `main`, then create a branch named
    `feature/<short-slug>`.
-2. Implement the feature following the conventions above.
-3. Write or extend tests covering the new behavior.
-4. Run, in order, and get all three green before considering the work done:
+2. Run `npm install` before anything else, every time, unconditionally — don't check
+   whether `node_modules` looks populated first. This repo uses `isolation: worktree`,
+   which gives you a fresh working directory per run; `node_modules` isn't part of git,
+   so a dependency being in `package.json` (like `playwright`, see step 5) does not
+   mean it's actually installed here yet.
+3. Implement the feature following the conventions above.
+4. Write or extend tests covering the new behavior.
+5. Run, in order, and get all three green before considering the work done:
    `npm run lint`, `npm run test`, `npm run build`. If something fails, fix it and
    re-run — don't stop on a red run.
-5. If the feature touches the UI (a new button, control, page, or any user-visible
+6. If the feature touches the UI (a new button, control, page, or any user-visible
    behavior), passing automated tests is not enough — actually verify it in a real
    browser. This repo has `playwright` as a dev dependency for exactly this purpose
    (don't rely on a Chrome extension or IDE integration being connected — it may not
@@ -65,10 +70,11 @@ charts.
    If `npx playwright install chromium` hasn't been run yet in this environment, run
    it first (one-time browser download). If Playwright genuinely cannot run here, say
    so explicitly in your final report rather than skipping this step silently.
-6. Commit with a clear, conventional commit message.
-7. Push the branch to `origin`.
-8. Report back the PR compare URL, and what you saw when you verified the feature in
-   the browser (or that you couldn't and why):
+7. Commit with a clear, conventional commit message.
+8. Push the branch to `origin`, and check that the push actually succeeded (read its
+   output — don't assume).
+9. Only after confirming the push succeeded, report back the PR compare URL, and what
+   you saw when you verified the feature in the browser (or that you couldn't and why):
    `https://github.com/brandoneilers/salt-react/compare/main...feature/<short-slug>?expand=1`
 
 ## Hard rules
@@ -77,3 +83,7 @@ charts.
 - Never force-push.
 - Never open, merge, or approve the PR yourself — stop once the branch is pushed and
   hand the compare URL back. A human reviews and opens the PR.
+- Never report a PR compare URL unless you have confirmed, from the actual output of
+  `git push`, that the branch exists on `origin` with your commit on it. A URL for a
+  branch that isn't actually pushed is worse than no URL — say what step you got stuck
+  on instead.
