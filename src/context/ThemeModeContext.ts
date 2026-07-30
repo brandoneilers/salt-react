@@ -8,4 +8,4 @@ import { createContext } from 'react'
  * solves - reach for it only when passing a prop down manually gets painful,
  * not as a default replacement for props.
  */
-export const ThemeModeContext = createContext(false)
+export const ThemeModeContext = createContext(true)

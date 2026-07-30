@@ -7,7 +7,13 @@ const STORAGE_KEY = 'salt-dashboard-dark-mode'
 // `useState(readStoredPreference())`, which would call it (and hit
 // localStorage) on every single render.
 function readStoredPreference() {
-  return localStorage.getItem(STORAGE_KEY) === 'true'
+  const storedPreference = localStorage.getItem(STORAGE_KEY)
+
+  if (storedPreference === null) {
+    return true
+  }
+
+  return storedPreference === 'true'
 }
 
 export function useDarkMode() {
