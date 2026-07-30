@@ -102,8 +102,9 @@ export function UsersPage() {
     const csvContent = [header, ...rows]
       .map((row) => row.map((value) => escapeCsvValue(String(value))).join(','))
       .join('\n')
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const utf8Bom = new Uint8Array([0xef, 0xbb, 0xbf])
+    const csvBytes = new TextEncoder().encode(csvContent)
+    const blob = new Blob([utf8Bom, csvBytes], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
