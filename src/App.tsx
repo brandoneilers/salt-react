@@ -99,10 +99,16 @@ function App() {
   // Move keyboard/screen-reader focus to the new page's heading on
   // navigation - a common SPA accessibility pattern, and a genuine use for
   // an imperative DOM ref (`.focus()` isn't something you can express as a
-  // prop). Skipped on the very first render (previousActive is still
-  // undefined then) so mounting the app doesn't steal focus unprompted.
+  // prop). Requires previousActive to be both defined AND different from
+  // active: usePrevious's internal effect has no dependency array, so it
+  // re-syncs on every App re-render, not just ones where `active` changes.
+  // Any unrelated re-render shortly after mount (breakpoint detection
+  // settling, useResizableWidth reading localStorage, etc.) was enough to
+  // flip previousActive from undefined to the *same* value as active,
+  // which passed a `!== undefined` check and stole focus on page load
+  // despite the user never having navigated anywhere.
   useEffect(() => {
-    if (previousActive !== undefined) {
+    if (previousActive !== undefined && previousActive !== active) {
       headingRef.current?.focus()
     }
   }, [active, previousActive])
