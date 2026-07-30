@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
+  Button,
   Card,
   TableContainer,
   Table,
@@ -16,7 +17,7 @@ import {
 } from '@salt-ds/core'
 import type { AvatarProps } from '@salt-ds/core'
 import { SearchInput } from '@salt-ds/lab'
-import { ArrowUpIcon, ArrowDownIcon } from '@salt-ds/icons'
+import { ArrowUpIcon, ArrowDownIcon, DownloadIcon } from '@salt-ds/icons'
 
 type UserStatus = 'Active' | 'Invited' | 'Suspended'
 
@@ -95,17 +96,46 @@ export function UsersPage() {
     )
   }
 
+  function exportCsv() {
+    const header = ['name', 'email', 'role', 'status', 'last active']
+    const rows = visibleUsers.map((user) => [user.name, user.email, user.role, user.status, user.lastActive])
+    const csvContent = [header, ...rows]
+      .map((row) => row.map((value) => escapeCsvValue(String(value))).join(','))
+      .join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'users.csv'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(url)
+  }
+
+  function escapeCsvValue(value: string) {
+    const needsQuotes = /[",\n]/.test(value)
+    return needsQuotes ? `"${value.replace(/"/g, '""')}"` : value
+  }
+
   return (
     <Card className="chart-panel">
       <StackLayout gap={3}>
-        <SearchInput
-          className="users-search"
-          inputProps={{ placeholder: 'Search by name, email, or role' }}
-          value={search}
-          onChange={(_event, value) => setSearch(value)}
-          onClear={() => setSearch('')}
-          style={{ maxWidth: 360 }}
-        />
+        <FlexLayout align="center" gap={2}>
+          <SearchInput
+            className="users-search"
+            inputProps={{ placeholder: 'Search by name, email, or role' }}
+            value={search}
+            onChange={(_event, value) => setSearch(value)}
+            onClear={() => setSearch('')}
+            style={{ maxWidth: 360 }}
+          />
+          <Button onClick={exportCsv}>
+            <DownloadIcon aria-hidden />
+            Export CSV
+          </Button>
+        </FlexLayout>
         <TableContainer>
           <Table zebra aria-label="Users">
             <THead>
