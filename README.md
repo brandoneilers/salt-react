@@ -1,5 +1,7 @@
 # Salt React
 
+[![CI](https://github.com/brandoneilers/salt-react/actions/workflows/ci.yml/badge.svg)](https://github.com/brandoneilers/salt-react/actions/workflows/ci.yml)
+
 A small internal-dashboard app built with **React 19**, **TypeScript**, and JPMorgan's [Salt Design System](https://www.saltdesignsystem.com/), put together as a portfolio piece to demonstrate architecting a real application on top of Salt rather than just styling a few components.
 
 All data in the app is **simulated** — the Analytics page hits a fake in-memory "backend" with artificial network latency (see [`src/api/analytics.ts`](src/api/analytics.ts)) so the loading/error/retry states are real and testable without an actual server.
