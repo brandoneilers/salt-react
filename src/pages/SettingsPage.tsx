@@ -29,7 +29,7 @@ export function SettingsPage({
       <StackLayout gap={3} separators>
         <H3>Workspace</H3>
 
-        <FlexLayout align="center" gap={3}>
+        <FlexLayout align="center" gap={3} className="settings-control-row">
           <StackLayout gap={0}>
             <Text>Theme</Text>
             <Text styleAs="label" color="secondary">
@@ -39,7 +39,7 @@ export function SettingsPage({
           <ThemeToggle darkMode={darkMode} onToggle={onToggleDarkMode} />
         </FlexLayout>
 
-        <FlexLayout align="center" gap={3}>
+        <FlexLayout align="center" gap={3} className="settings-control-row">
           <StackLayout gap={0}>
             <Text>Density</Text>
             <Text styleAs="label" color="secondary">
@@ -60,7 +60,7 @@ export function SettingsPage({
           </ToggleButtonGroup>
         </FlexLayout>
 
-        <FlexLayout align="center" gap={3}>
+        <FlexLayout align="center" gap={3} className="settings-control-row">
           <StackLayout gap={0}>
             <Text>Sidebar width</Text>
             <Text styleAs="label" color="secondary">

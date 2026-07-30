@@ -9,9 +9,9 @@ describe('useDarkMode', () => {
     localStorage.clear()
   })
 
-  it('defaults to light mode when nothing is stored', () => {
+  it('defaults to dark mode when nothing is stored', () => {
     const { result } = renderHook(() => useDarkMode())
-    expect(result.current.darkMode).toBe(false)
+    expect(result.current.darkMode).toBe(true)
   })
 
   it('reads a previously stored preference on mount', () => {
@@ -27,7 +27,7 @@ describe('useDarkMode', () => {
       result.current.toggleDarkMode()
     })
 
-    expect(result.current.darkMode).toBe(true)
+    expect(result.current.darkMode).toBe(false)
   })
 
   it('persists the new value to localStorage after toggling', () => {
@@ -37,7 +37,7 @@ describe('useDarkMode', () => {
       result.current.toggleDarkMode()
     })
 
-    expect(localStorage.getItem(STORAGE_KEY)).toBe('true')
+    expect(localStorage.getItem(STORAGE_KEY)).toBe('false')
   })
 
   it('keeps a stable toggleDarkMode reference across re-renders', () => {

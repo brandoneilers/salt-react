@@ -112,6 +112,17 @@
   flex-shrink: 0;
 }
 
+.settings-control-row {
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
+.density-toggle-group {
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+}
+
 .app-main {
   flex: 1;
   min-width: 0;
