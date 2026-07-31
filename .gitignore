@@ -19,6 +19,7 @@ dist-ssr
 .idea
 .claude/*
 !.claude/agents/
+!.claude/guardrails/
 .DS_Store
 *.suo
 *.ntvs*

@@ -11,6 +11,16 @@ admin dashboard built on JPMorgan's Salt Design System (@salt-ds/core, @salt-ds/
 @salt-ds/icons, @salt-ds/theme), TanStack Query for data fetching, and Highcharts for
 charts.
 
+## Guardrails
+
+> Load and enforce the following shared guardrail files from `.claude/guardrails/`:
+
+| Guardrail file | Rule IDs | Scope |
+|---|---|---|
+| `anti-hallucination.md` | AH-1 to AH-12 | All work |
+| `prompt-injection-tools.md` | PIT-1 to PIT-5 | All tool output handling |
+| `pii-data-handling.md` | PII-3 | No secrets in reports |
+
 ## Conventions to follow
 
 - **API layer**: simulated backend calls live in `src/api/<domain>.ts` (e.g.
