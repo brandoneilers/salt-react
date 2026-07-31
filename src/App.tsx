@@ -7,11 +7,13 @@ import {
   BuildReportIcon,
   SettingsIcon,
   MenuIcon,
+  WarningIcon,
 } from '@salt-ds/icons'
 import { Sidebar } from './components/Sidebar'
 import { ResizeHandle } from './components/ResizeHandle'
 import { DashboardPage } from './pages/DashboardPage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
+import { TicketsPage } from './pages/TicketsPage'
 import { UsersPage } from './pages/UsersPage'
 import { ReportsPage } from './pages/ReportsPage'
 import { SettingsPage } from './pages/SettingsPage'
@@ -33,6 +35,11 @@ const PAGES = {
     subtitle: 'Deep-dive metrics and trends.',
     icon: ChartLineIcon,
     description: 'Analytics is under construction. Detailed charts and trend breakdowns will live here.',
+  },
+  Tickets: {
+    subtitle: 'Monitor issue queues and service health.',
+    icon: WarningIcon,
+    description: 'A sortable, filterable ticket workspace with service metrics and health charts will live here.',
   },
   Users: {
     subtitle: 'Manage accounts and permissions.',
@@ -177,6 +184,7 @@ function App() {
 
               {active === 'Dashboard' && <DashboardPage />}
               {active === 'Analytics' && <AnalyticsPage />}
+              {active === 'Tickets' && <TicketsPage />}
               {active === 'Users' && <UsersPage />}
               {active === 'Reports' && <ReportsPage />}
               {active === 'Settings' && (
@@ -190,6 +198,7 @@ function App() {
               )}
               {active !== 'Dashboard' &&
                 active !== 'Analytics' &&
+                active !== 'Tickets' &&
                 active !== 'Users' &&
                 active !== 'Reports' &&
                 active !== 'Settings' && (

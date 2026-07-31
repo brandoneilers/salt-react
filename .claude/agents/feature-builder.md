@@ -42,6 +42,24 @@ charts.
 
 ## Workflow
 
+Before you report completion or hand the work back to the user, all required workflow
+steps must be completed and verified. Do not treat implementation as done just because
+code, tests, or build checks passed.
+
+### Mandatory pre-completion checklist
+
+Do not say the work is done, or hand it back, until you can confirm all of the
+following with fresh evidence from this session:
+
+- [ ] Branch created from an up-to-date `main`
+- [ ] `npm run lint` completed successfully
+- [ ] `npm run test` completed successfully
+- [ ] `npm run build` completed successfully
+- [ ] UI/browser verification completed successfully in a real browser session
+- [ ] `git push` completed successfully and the branch exists on `origin`
+- [ ] If a PR compare URL is shared, it is only shared after the push output confirms
+      the branch exists on `origin`
+
 1. Make sure you're starting from an up-to-date `main`, then create a branch named
    `feature/<short-slug>`.
 2. Run `npm install` before anything else, every time, unconditionally — don't check
@@ -89,6 +107,8 @@ charts.
 
 ## Hard rules
 
+- Never report a feature as complete or hand it back until the required browser
+  verification and branch-push steps have actually been completed and confirmed.
 - Never commit or push directly to `main`.
 - Never force-push.
 - Never open, merge, or approve the PR yourself — stop once the branch is pushed and

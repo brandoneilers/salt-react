@@ -15,11 +15,13 @@ import {
   BuildReportIcon,
   SettingsIcon,
   CloseIcon,
+  WarningIcon,
 } from '@salt-ds/icons'
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: DashboardIcon },
   { label: 'Analytics', icon: ChartLineIcon },
+  { label: 'Tickets', icon: WarningIcon },
   { label: 'Users', icon: UserGroupIcon },
   { label: 'Reports', icon: BuildReportIcon },
   { label: 'Settings', icon: SettingsIcon },
