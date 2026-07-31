@@ -201,6 +201,15 @@
   border-radius: var(--salt-palette-corner, 0);
 }
 
+.ticket-filter {
+  min-width: 180px;
+  border: 1px solid var(--salt-separable-primary-borderColor);
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+  background: var(--salt-container-primary-background);
+  color: var(--salt-content-primary-foreground);
+}
+
 /* ToggleButtonGroup already renders its own outer border, but at a
    different (dimmer) gray than the bordered Button next to it - force it
    to the same token so the two read as consistent, single-bordered controls. */

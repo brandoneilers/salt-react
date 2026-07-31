@@ -12,7 +12,7 @@ describe('Sidebar', () => {
       <Sidebar active="Dashboard" onSelect={noop} width={240} isMobile={false} open={false} onClose={noop} />,
     )
 
-    for (const label of ['Dashboard', 'Analytics', 'Users', 'Reports', 'Settings']) {
+    for (const label of ['Dashboard', 'Analytics', 'Tickets', 'Users', 'Reports', 'Settings']) {
       expect(screen.getByRole('link', { name: label })).toBeInTheDocument()
     }
   })
